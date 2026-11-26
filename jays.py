@@ -6,7 +6,8 @@ import seaborn as sns
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder, StandardScaler
 
 
-data = pd.read_csv(r"C:\Users\Admin\Downloads\ml_dataset_resume_project\ml_practice_dataset_100MB.csv")
+DATA_PATH = "ml_practice_dataset_100MB.csv"  # place the CSV next to this script
+data = pd.read_csv(DATA_PATH)
 
 print(data.head())
 print(data.tail())
@@ -14,40 +15,22 @@ data.info()
 print(data.describe())
 print(data.columns)
 
-X = data.iloc[ : , 1:-2]
-y = data['churn']
 
 
 
 
 
 
-print(data.fillna(data.mean(numeric_only = True),inplace = True))
+data = data.fillna(data.mean(numeric_only=True))
 
 data[['city','device_type']] = data[['city','device_type']].fillna(data[['city','device_type']].mode().iloc[0])
 
 print(data.isna().sum())
 
-from sklearn.impute import SimpleImputer
-impute = SimpleImputer(strategy = 'most_frequent')
-data[['city','device_type']] = impute.fit_transform(data[['city','device_type']])
-print(data)
 
-from sklearn.impute import SimpleImputer
-impute = SimpleImputer(strategy = 'mean')
-data[['credit_score', 'annual_income']] = impute.fit_transform(data[['credit_score', 'annual_income']])
-print(data)
-
-
-from sklearn.impute import SimpleImputer
-impute = SimpleImputer(strategy = 'median')
-data[['credit_score', 'annual_income']] = impute.fit_transform(data[['credit_score', 'annual_income']])
-print(data)
-
+# Impute numeric columns once, with KNN (the earlier mean/median passes were overwritten)
 from sklearn.impute import KNNImputer
-impute = KNNImputer(n_neighbors=10)
-data[['credit_score', 'annual_income']] = impute.fit_transform(data[['credit_score', 'annual_income']])
-print(data)
+data[['credit_score', 'annual_income']] = KNNImputer(n_neighbors=10).fit_transform(data[['credit_score', 'annual_income']])
 
 
 print(data['city'].unique())
@@ -98,7 +81,7 @@ knn.fit(X_train ,y_train)
 y_pred = knn.predict(X_test)
 print(accuracy_score(y_test,y_pred))
 
-nb = GaussianNB
+nb = GaussianNB()
 nb.fit(X_train , y_train)
 y_pred = nb.predict(X_test)
 print(accuracy_score(y_test,y_pred))
@@ -111,7 +94,7 @@ y_pred = dt.predict(X_test)
 print(accuracy_score(y_test,y_pred))
 
 from sklearn.linear_model import LogisticRegression
-model = LogisticRegression(max_iter = 150, multi_class = 'auto')
+model = LogisticRegression(max_iter=150)
 model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
 print(accuracy_score(y_test,y_pred))
