@@ -216,7 +216,7 @@ clf.fit(X_train , y_train)
 
 y_pred = clf.predict(X_test)
 
-print(accuracy_score(y_test , y_pred), 4)
+print('Accuracy:', round(accuracy_score(y_test, y_pred), 4))
 print(classification_report(y_test, y_pred))
 
 
@@ -250,13 +250,13 @@ if len(Xr) > 450000:
 
 Xr_train, Xr_test, yr_train, yr_test = train_test_split(Xr, yr, test_size = 0.3, random_state = 31)
 
-reg =RandomForestRegressor(n_estimators = 120, random_state = 79, n_jobs =1)
+reg =RandomForestRegressor(n_estimators = 120, random_state = 79, n_jobs = -1)
 reg.fit(Xr_train, yr_train)
 
 yr_pred = reg.predict(Xr_test)
 
-print(mean_absolute_error(yr_test, yr_pred), 3)
-print(r2_score(yr_test, yr_pred),3)
+print('MAE:', round(mean_absolute_error(yr_test, yr_pred), 3))
+print('R2:', round(r2_score(yr_test, yr_pred), 3))
 
 
 print()
@@ -288,5 +288,4 @@ print(summary.head(20))
 
 
 
-#<pandas.api.typing.DataFrameGroupBy object at 0x0000024F208D3620>
 
